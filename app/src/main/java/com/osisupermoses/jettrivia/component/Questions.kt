@@ -84,7 +84,7 @@ fun Questions(viewModel: QuestionViewModel) {
                 isSelected = isSelected) {
 
                 questionIndex.value = questionIndex.value + 1
-                if (correctAnswerState.value == true ) {
+                if (correctAnswerState.value == true) {
                     correctAnswerList.add(question.answer)
                 }
                 isSelected.value = true
@@ -115,8 +115,8 @@ fun QuestionDisplay(
 
     val choicesState = remember(question) {
         question.choices.toMutableList()
-
     }
+
     val answerState = remember(question) {
         mutableStateOf<Int?>(null)
     }
@@ -187,9 +187,8 @@ fun QuestionDisplay(
                         .background(Color.Transparent),
                         verticalAlignment = Alignment.CenterVertically) {
 
-                        if (isSelected.value) {
                             RadioButton(
-                                enabled = true,
+                                enabled = isSelected.value,
                                 selected = (answerState.value == index),
                                 onClick = { updateAnswer(index)
                                     isSelected.value = false
@@ -198,28 +197,22 @@ fun QuestionDisplay(
                                 colors =
                                 RadioButtonDefaults.colors(
                                     selectedColor =
-                                    if (correctAnswerState.value == true
-                                        && answerState.value == index)
-                                        Color.Green.copy(alpha = 0.2f)
-                                    else Color.Red.copy(alpha = 0.2f)
+                                        if (correctAnswerState.value == true
+                                            && answerState.value == index)
+                                            Color.Green.copy(alpha = 0.2f)
+                                        else Color.Red.copy(alpha = 0.2f),
+                                    disabledColor =
+                                        if (correctAnswerState.value == true
+                                            && answerState.value == index) {
+                                            Color.Green.copy(alpha = 0.2f)
+                                        } else if (correctAnswerState.value == false
+                                            && answerState.value == index) {
+                                            Color.Red.copy(alpha = 0.2f)
+                                        } else {
+                                            Color.Black.copy(alpha = 0.2f)
+                                        }
                                 )
                             )
-                        } else {
-                            RadioButton(
-                                enabled = false,
-                                selected = (answerState.value == index),
-                                onClick = { updateAnswer(index) },
-                                modifier = Modifier.padding(start = 16.dp),
-                                colors =
-                                RadioButtonDefaults.colors(
-                                    selectedColor =
-                                    if (correctAnswerState.value == true
-                                        && answerState.value == index
-                                    ) Color.Green.copy(alpha = 0.2f)
-                                    else Color.Red.copy(alpha = 0.2f)
-                                )
-                            ) //rb ends
-                        }
 
                         val annotatedString = buildAnnotatedString {
                             withStyle(style = SpanStyle(fontWeight = FontWeight.Light,
